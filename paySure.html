@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>云秒通收银台</title>
+    <link rel="stylesheet" href="styles.css"> <!-- 引入外部样式 -->
+    <style>
+        /* 样式与您提供的样式一致 */
+        /* Container */
+        .PayShouYinTai {
+            width: 100vw;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .PayShouYinTai-top {
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: PingFangSC, PingFang SC;
+            font-weight: 500;
+            font-size: 17px;
+            color: #333333;
+            background-color: #ffffff;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        .back {
+            width: 40px;
+            height: 44px;
+            cursor: pointer;
+        }
+
+        .threeDot {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+        }
+
+        .PayShouYinTai-banner {
+            background-image: url("../../assets/img/main/shouyintai.png");
+            background-repeat: no-repeat;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            background-size: contain;
+            background-position: top center;
+            padding: 0;
+            margin: 0;  /* 上下左右外边距均为0 */
+        }
+
+        .banner-text {
+            margin-top: 80px;
+            font-family: PingFangSC, PingFang SC;
+            font-weight: normal;
+            font-size: 23px;
+            color: #FFFFFF;
+            line-height: 23px;
+        }
+
+        /* Payment Input */
+        .PayShouYinTai-input-container {
+            margin-top: 20px;
+            width: 85%;
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-label {
+            font-size: 17px;
+            color: #666666;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+            margin-top: 10px;
+            font-size: 25px;
+            font-weight: bold;
+            color: #333;
+            margin-right: 5px;
+        }
+
+        .input-wrapper-symbol {
+            font-size: 25px;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-money {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 25px;
+            color: #333;
+            padding: 5px;
+            align-items: center;
+        }
+
+        .PayShouYinTai-bottom-layout {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 10px 25px 10px;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .PayShouYinTai-confirm-button {
+            width: 90%;
+            padding: 12px 0;
+            background-color: #007bff;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 25px;
+            text-align: center;
+            border: 0px;
+            justify-content: center;
+            display: flex;
+            box-sizing: border-box;
+            max-width: 400px;
+            align-items: center;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="PayShouYinTai">
+
+        <div class="PayShouYinTai-top">
+            <img onclick="back()" class="back" src="assets/img/main/back.png" alt="返回" />
+            <div>云秒通收银台</div>
+            <div class="threeDot"></div>
+        </div>
+
+        <div class="PayShouYinTai-banner">
+            <div class="banner-text">向商家 支付</div>
+            <div class="PayShouYinTai-input-container">
+                <label class="input-label">支付金额</label>
+                <div class="input-wrapper">
+                    <span class="input-wrapper-symbol">¥</span>
+                    <input type="number" class="input-money" placeholder="请输入金额" />
+                </div>
+            </div>
+        </div>
+
+        <div class="PayShouYinTai-bottom-layout">
+            <!-- 按钮 -->
+            <button class="PayShouYinTai-confirm-button" onclick="confirmPayment()">确定</button>
+        </div>
+    </div>
+
+    <script>
+        function back() {
+            // 返回逻辑代码，例如：window.history.back();
+            window.history.back();
+        }
+
+        function confirmPayment() {
+            // 确认支付逻辑代码
+            alert("支付成功！");
+        }
+    </script>
+</body>
+</html>
