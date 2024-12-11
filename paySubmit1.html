@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"/>
+    <title>好收银</title>
+    <!-- <link rel="stylesheet" href="styles.css"> 引入外部样式 -->
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <script th:src="@{/css/js/jquery-3.3.1.min.js}"></script>
+    <style>
+        /* Container */
+        html, body {
+            margin: 0; /* 去掉默认边距 */
+            padding: 0; /* 去掉默认填充 */
+            overflow-x: hidden; /* 禁止水平滚动 */
+            overflow-y: auto;
+            /* height: 100%; */
+        }
+
+        * {
+            box-sizing: border-box; /* 设置盒模型 */
+        }
+
+        .PayConfirm {
+            width: 100vw;
+            height: 100vh;
+            box-sizing: border-box;
+            background-color: #f2f2f2;
+            height: calc(100vh - 84px);
+            overflow-y: auto;
+        }
+
+        .PayConfirm-top {
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: PingFangSC, PingFang SC;
+            font-weight: 500;
+            font-size: 17px;
+            color: #333333;
+            background-color: #ffffff;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        /* .back {
+            width: 40px;
+            height: 44px;
+            cursor: pointer;
+        } */
+
+        /* .threeDot {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+        } */
+
+        .PayConfirm-banner {
+            background-image: url("../../assets/img/main/payConfirm-bg.png");
+            width: 100%;
+            background-repeat: no-repeat;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            background-size: contain;
+            background-position: top center;
+        }
+
+        .banner-img {
+            width: 32px;
+            height: 32px;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .banner-text {
+            margin-top: 15px;
+            font-family: PingFangSC, PingFang SC;
+            font-weight: normal;
+            font-size: 17px;
+            color: #FFFFFF;
+            line-height: 17px;
+        }
+
+        /* Payment Input */
+        .PayConfirm-container {
+            margin-top: -50px;
+            margin-left: 10px;
+            margin-right: 10px;
+            padding: 15px;
+            background-image: url("../../assets/img/main/payConfirm-money-bg.png");
+            background-repeat: no-repeat;
+            width: 95%;
+            height: 265px;
+            background-size: contain;
+            background-position: center;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .input-label {
+            font-size: 17px;
+            color: #666666;
+            align-items: center;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+            margin-top: 15px;
+            font-size: 30px;
+            font-weight: bold;
+            color: #333;   
+            width: 100%;    
+        }
+
+        .input-wrapper-symbol {
+            font-size: 30px;
+            display: flex;
+            align-items: center;
+        }
+
+
+        .input-money {
+            flex: 0 1 auto;
+            border: none;
+            outline: none;
+            font-size: 30px;
+            color: #333;
+            padding: 5px;
+            align-items: center; 
+        }
+
+        .PayConfirm-bottom-layout {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 10px 25px 10px;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .PayConfirm-confirm-button {
+            width: 90%;
+            padding: 12px 0;
+            background-color: #007bff;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 25px;
+            text-align: center;
+            border: 0px;
+            justify-content: center;
+            display: flex;
+            box-sizing: border-box;
+            max-width: 400px;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        /* 外层容器 */
+        .payment-wrapper {
+            margin-top: -50px;
+            margin-left: 16px;
+            margin-right: 16px;
+            font-family: Arial, sans-serif;
+        }
+
+        .payment-wrapper-jd {
+            background: #ffffff;
+            padding-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        /* 支付方式容器 */
+        .payment-jd {
+            background: #ffffff;
+            padding: 12px;
+            border: 1px solid #ffffff;
+            border-radius: 8px;
+            align-items: center;
+            display: flex;
+            font-size: 0;
+            cursor: pointer;
+        }
+
+        .payment-wx {
+            background: #ffffff;
+            margin-top: 10px;
+            padding: 12px;
+            border: 1px solid #ffffff;
+            border-radius: 8px;
+            align-items: center;
+            display: flex;
+            font-size: 0;
+            cursor: pointer;
+        }
+
+        .payment-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .payment-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* 支付方式文字 */
+        .payment-label {
+            flex: 1;
+            text-align: left;
+            font-size: 14px;
+            color: #333;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            vertical-align: middle;
+        }
+
+        /* 单选框占位 */
+        .payment-radio {
+            width: 22px;
+            height: 22px;
+            vertical-align: middle;
+        }
+
+        .payment-radio img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* 分期选项列表 */
+        .installment-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px;
+            margin-right: 10px;
+            margin-left: 10px;
+            
+        }
+
+        /* 分期选项 */
+        .installment-item {
+            display: flex;
+            flex-direction: column;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            padding-left: 10px;
+            padding-right: 10px;
+            background-image: url("../../assets/img/main/payConfirm-unselect-bg.png");
+            background-repeat: no-repeat;
+            box-sizing: border-box;
+            background-size: contain;
+            background-position: center;
+            cursor: pointer;
+        }
+        .installment-description{
+            font-size: 11px;
+            color: #666666;
+        }
+        .installment-item:hover {
+            background-image: url("../../assets/img/main/payConfirm-select-bg.png");
+        }
+        /* 分期选项文字 */
+        .installment-label {
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
+</head>
+<body >
+    <div class="PayConfirm">
+
+        <div class="PayConfirm-top" style="justify-content: center;">
+            <!-- <img onclick="back()" class="back" src="../../assets/img/main/back.png" alt="返回" /> -->
+            <div >好收银</div>
+            <!-- <div class="threeDot"></div> -->
+        </div>
+
+        <div class="PayConfirm-banner">
+            <img class="banner-img" src="../../assets/img/main/payConfirm-ic.png" alt="确认付款" />
+            <div class="banner-text">确认付款</div>
+            <div class="PayConfirm-container">
+                <label class="input-label">支付金额</label>
+                <div class="input-wrapper" >
+                    <span class="input-wrapper-symbol">¥</span>
+                    <input type="number" class="input-money" id="amountInput" placeholder="请输入金额" oninput="updateInstallments()"
+                    style="margin-right: 16px; width: 100%; box-sizing: border-box;  padding: 8px;"
+                    />
+                    <!-- <div class="input-wrapper-money"><span id="inputValue">111111.00</span></div> -->
+                </div>
+            </div>
+        </div>
+
+        <div class="payment-wrapper">
+            <div class="payment-wrapper-jd">
+                <!-- 京东支付 -->
+                <div class="payment-jd" onclick="selectPayment('jdPay')">
+                    <div class="payment-icon">
+                        <img src="../../assets/img/main/payConfirm-jd.png" alt="京东支付" />
+                    </div>
+                    <span class="payment-label">京东支付</span>
+                    <div class="payment-radio">
+                        <img id="jdRadio" src="../../assets/img/main/payConfirm-unselect.png" alt="" />
+                    </div>
+                </div>
+
+                <!-- 分期选项 -->
+                <div class="installment-list">
+                    <div class="installment-item" onclick="selectPayment('jdPay')">
+                        <span class="installment-label" id="installment-3" style="font-size: 14px;line-height: 1 !important;">¥ 0*3期</span>
+                        <span class="installment-description" id="installment-description-3" style="font-size: 11px;line-height: 1 !important;">含服务费¥0/期</span>
+                    </div>
+                    <div class="installment-item" onclick="selectPayment('jdPay')">
+                        <span class="installment-label" id="installment-6" style="font-size: 14px;line-height: 1 !important;">¥ 0*6期</span>
+                        <span class="installment-description" id="installment-description-6" style="font-size: 11px;line-height: 1 !important;">含服务费¥0/期</span>
+                    </div>
+                    <div class="installment-item" onclick="selectPayment('jdPay')">
+                        <span class="installment-label" id="installment-12" style="font-size: 14px;line-height: 1 !important;">¥ 0*12期</span>
+                        <span class="installment-description" id="installment-description-12" style="font-size: 11px;line-height: 1 !important;">含服务费¥0/期</span>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; margin-left: 12px;margin-top: 10px;font-size: 11px;line-height: 1 !important;">
+                    <img src="../../assets/img/main/jingDongTip.png" alt="图标" style="width: 12px; height: 12px; margin-right: 4px;" />
+                    <div style="color: gray; font-size: 11px; margin-left: 4px;">
+                        由京东白条分期提供的消费金融服务,分期付更轻松<br/>服务费只做初步演算展示,实际收费以京东金融平台为准
+                    </div>
+                </div>
+                
+
+            </div>
+
+            <!-- 微信支付 -->
+            <div class="payment-wx" onclick="selectPayment('wxPay')">
+                <div class="payment-icon">
+                    <img src="../../assets/img/main/payConfirm-wx.png" alt="微信支付" />
+                </div>
+                <span class="payment-label">微信支付</span>
+                <div class="payment-radio">
+                    <img id="wxRadio" src="../../assets/img/main/payConfirm-unselect.png" alt="" />
+                </div>
+            </div>
+        </div>
+
+        <div class="PayConfirm-bottom-layout">
+            <button class="PayConfirm-confirm-button" onclick="confirmPayment()">确认付款</button>
+        </div>
+    </div>
+
+    <script>
+        function back() {
+            window.history.back();
+        }
+
+        function selectPayment(payment) {
+            // 更新选中状态并修改单选框图标
+            document.getElementById('jdRadio').src = payment === 'jdPay' ? '../../assets/img/main/payConfirm-select.png' : '../../assets/img/main/payConfirm-unselect.png';
+            document.getElementById('wxRadio').src = payment === 'wxPay' ? '../../assets/img/main/payConfirm-select.png' : '../../assets/img/main/payConfirm-unselect.png';
+        }
+        function updateInstallments() {
+            const amount = parseFloat(document.getElementById("amountInput").value);
+            if (!isNaN(amount)) {
+                const fees = calculateServiceFee(amount);
+                // 非首期,计算每期应付款金额，保留两位小数并舍弃
+                const installmentLast3 = Math.floor((amount / 3) * 100) / 100;
+                const installmentLast6 = Math.floor((amount / 6) * 100) / 100;
+                const installmentLast12 = Math.floor((amount / 12) * 100) / 100;
+                console.log(installmentLast3, installmentLast6, installmentLast12);
+                //首期
+                const installmentFirst3 = (amount - 2 * installmentLast3).toFixed(2);
+                const installmentFirst6 = (amount - 5 * installmentLast6).toFixed(2);
+                const installmentFirst12 = (amount - 11 * installmentLast12).toFixed(2);
+                console.log(installmentFirst3, installmentFirst6, installmentFirst12);
+
+                const installment3 = (parseFloat(installmentFirst3) + parseFloat(fees['3'])).toFixed(2);
+                const installment6 = (parseFloat(installmentFirst6) + parseFloat(fees['6'])).toFixed(2);
+                const installment12 = (parseFloat(installmentFirst12) + parseFloat(fees['12'])).toFixed(2);
+                console.log(installment3, installment6, installment12);
+                // 将结果转换为字符串并保留两位小数
+                document.getElementById("installment-3").innerText = `¥ ${installment3} * 3期`;
+                document.getElementById("installment-6").innerText = `¥ ${installment6} * 6期`;
+                document.getElementById("installment-12").innerText = `¥ ${installment12} * 12期`;
+
+                document.getElementById("installment-description-3").innerText = `含服务费¥${fees['3']}/期`;
+                document.getElementById("installment-description-6").innerText = `含服务费¥${fees['6']}/期`;
+                document.getElementById("installment-description-12").innerText = `含服务费¥${fees['12']}/期`;
+            } else {
+                // 如果输入不合法，保持原有文本
+                document.getElementById("installment-3").innerText = `¥ 0.0 * 3期`;
+                document.getElementById("installment-6").innerText = `¥ 0.0 * 6期`;
+                document.getElementById("installment-12").innerText = `¥ 0.0 * 12期`;
+
+                document.getElementById("installment-description-3").innerText = `含服务费¥0/期`;
+                document.getElementById("installment-description-6").innerText = `含服务费¥0/期`;
+                document.getElementById("installment-description-12").innerText = `含服务费¥0/期`;
+            }
+        }
+        ///计算服务费
+        function calculateServiceFee(amount) {
+            const rates = {
+                '3': 0.008,
+                '6': 0.0075,
+                '12': 0.00625
+            };
+    
+            const serviceFees = {};
+    
+            for (let key in rates) {
+                serviceFees[key] = (amount * rates[key]).toFixed(2);
+            }
+    
+            return serviceFees;
+        }
+
+        function confirmPayment() {
+            
+            let jdSelected = document.getElementById('jdRadio').src.includes('payConfirm-select.png');
+            let wxSelected = document.getElementById('wxRadio').src.includes('payConfirm-select.png');
+
+            if (jdSelected) {
+                // window.location.href = "京东小程序的链接";
+                alert("您选择了京东支付！");
+                jingDongPay();
+            } else if (wxSelected) {
+                alert("您选择了微信支付！");
+
+            } else {
+                alert("请先选择一个支付方式！");
+            }
+        }
+
+        function jingDongPay() {   
+            const payUrl = encodeURIComponent(document.getElementById("payUrl").value); // 使用原生 JS 获取输入框值
+            var mini_appid = "wx9c31a06b4a0f91bc";
+            var path = "pages/jdbtPay/jdbtPay?url=" + payUrl;
+
+            document.addEventListener('WeixinOpenTagsError', function (e) {
+                console.error(e.detail.errMsg);
+                alert(e.detail.errMsg);
+            });
+
+            // 创建按钮
+            var img = '<div class="img-container" style="text-align:center; margin-top: 150px;">' +
+                    '<img src="../../assets/img/main/JDFen.png" alt="描述" style="max-width: 30%; height: auto;" />' +
+                    '</div>';
+
+            // 跳转小程序或公众号
+            var btn = '<div class="btn-container" style="padding:20px 10px;margin-top:50px;"><button class="btn" style="width:100%; height:50px;font-size:20px;color:#fff;border-radius:50px;background-color: #58be6d;border:none;animation: btn 1.5s forwards infinite;box-shadow: 0 25px 45px rgba(0,0,0,0.1);">' +
+            '打开小程序</button></div>';
+            // 也就是把 步骤3 中的代码进行样式和内容的更改，动态渲染
+            // 这里有个小坑，如果说内容不显示，就给 wx-open-launch-weapp 标签设置width和height，设置不生效要加 position: absolute;
+
+            document.getElementById("internal").innerHTML = '<wx-open-launch-weapp style="z-index: 999; position: absolute; width: 100vw; height: 100vh; background-color: white;" id="launch-btn"' +
+            ' appid="' + mini_appid + '" path="' + path + '"><template>' + img 
+            + btn + '</template></wx-open-launch-weapp>';
+
+            // 配置微信 JS API
+            wx.config({
+                debug: true,
+                appId: res.data.appId,
+                timestamp: res.data.timestamp,
+                nonceStr: res.data.nonceStr,
+                signature: res.data.signature,
+                jsApiList: ["navigateToMiniProgram"],
+                openTagList: ["wx-open-launch-weapp"],
+            });
+
+            // 处理成功验证
+            wx.ready(function () {
+                console.log("微信配置成功，可以调用相关接口！");
+                // 可以在此调用小程序跳转接口，例如 wx.navigateToMiniProgram();
+            });
+
+            // 处理失败验证
+            wx.error(function (res) {
+                console.error("微信配置错误:", res);
+            });
+        }
+
+    </script>
+</body>
+</html>
