@@ -528,6 +528,8 @@
                     document.attachEvent("WeixinJSBridgeReady", handleFontSize);
                     document.attachEvent("onWeixinJSBridgeReady", handleFontSize);  }
            }
+           document.body.style.display = 'block';
+           
             function handleFontSize() {
                 // 设置网页字体为默认大小
                 WeixinJSBridge.invoke('setFontSizeCallback', { 'fontSize' : 0 });
