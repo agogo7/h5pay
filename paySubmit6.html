@@ -530,7 +530,7 @@
                 // 设置网页字体为默认大小
                 WeixinJSBridge.invoke('setFontSizeCallback', { 
                     'fontSize' : 0 
-                     document.body.style.display = 'block'; /* 页面加载完成后显示 */
+                     // document.body.style.display = 'block'; /* 页面加载完成后显示 */
                 });
                 // 强制重新应用字体样式
                 // document.querySelectorAll('.payment-label').forEach(label => {
@@ -540,7 +540,7 @@
                 WeixinJSBridge.on('menu:setfont', function() {
                     WeixinJSBridge.invoke('setFontSizeCallback', { 
                         'fontSize' : 0 
-                         document.body.style.display = 'block'; /* 页面加载完成后显示 */
+                         // document.body.style.display = 'block'; /* 页面加载完成后显示 */
                     });
                     // document.querySelectorAll('.payment-label').forEach(label => {
                     // label.style.fontSize = '14px';
