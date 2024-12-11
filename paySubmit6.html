@@ -533,18 +533,20 @@
                 });
                 // 强制重新应用字体样式
                 document.querySelectorAll('.payment-label').forEach(label => {
-                    label.style.fontSize = '14px'; // 强制设置字体大小
-                    document.body.style.display = 'block'; /* 页面加载完成后显示 */
+                        label.style.fontSize = '14px'; // 强制设置字体大小
                 });
+                document.body.style.display = 'block'; /* 页面加载完成后显示 */
+                
                 // 重写设置网页字体大小的事件
                 WeixinJSBridge.on('menu:setfont', function() {
                     WeixinJSBridge.invoke('setFontSizeCallback', { 
                         'fontSize' : 0 
                     });
+                    document.body.style.display = 'none';
                     document.querySelectorAll('.payment-label').forEach(label => {
                     label.style.fontSize = '14px';
-                    document.body.style.display = 'block'; /* 页面加载完成后显示 */
                     });
+                    document.body.style.display = 'block'; /* 页面加载完成后显示 */
                 });
             }   
        })();
