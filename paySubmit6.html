@@ -8,39 +8,6 @@
     <!-- <link rel="stylesheet" href="styles.css"> 引入外部样式 -->
     <script src="http://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
     <script th:src="@{/css/js/jquery-3.3.1.min.js}"></script>
-    <script
-        // 强制禁止用户修改微信客户端的字体大小
-       (function() {
-
-           if (typeof WeixinJSBridge == "object" && typeof WeixinJSBridge.invoke == "function") {
-                handleFontSize();
-           } else {
-                if (document.addEventListener) {
-                    document.addEventListener("WeixinJSBridgeReady", handleFontSize, false);
-                } else if (document.attachEvent) {
-                    document.attachEvent("WeixinJSBridgeReady", handleFontSize);
-                    document.attachEvent("onWeixinJSBridgeReady", handleFontSize);  }
-           }
-
-           document.body.style.display = 'block';
-            function handleFontSize() {
-                // 设置网页字体为默认大小
-                WeixinJSBridge.invoke('setFontSizeCallback', { 'fontSize' : 0 });
-                // 强制重新应用字体样式
-                document.querySelectorAll('.payment-label').forEach(label => {
-                    label.style.fontSize = '14px'; // 强制设置字体大小
-                });
-                // 重写设置网页字体大小的事件
-                WeixinJSBridge.on('menu:setfont', function() {
-                    WeixinJSBridge.invoke('setFontSizeCallback', { 'fontSize' : 0 });
-                    document.querySelectorAll('.payment-label').forEach(label => {
-                    label.style.fontSize = '14px';
-                        });
-                });
-            }   
-       })();
-    </script>
-
     <style>
         /* Container */
         html, body {
@@ -396,9 +363,6 @@
     </div>
 
     <script>
-
- 
-
         function back() {
             window.history.back();
         }
@@ -562,8 +526,7 @@
                     document.attachEvent("WeixinJSBridgeReady", handleFontSize);
                     document.attachEvent("onWeixinJSBridgeReady", handleFontSize);  }
            }
-
-           document.body.style.display = 'block';
+           document.body.style.display = 'block'; /* 页面加载完成后显示 */
             function handleFontSize() {
                 // 设置网页字体为默认大小
                 WeixinJSBridge.invoke('setFontSizeCallback', { 'fontSize' : 0 });
